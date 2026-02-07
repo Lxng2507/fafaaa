@@ -1,58 +1,96 @@
-const yesBtn = document.getElementById("yes-btn");
-const noBtn = document.getElementById("no-btn");
-const question = document.getElementById("question");
-const mainImage = document.getElementById("main-image");
-
-// Fonction pour déplacer le bouton en restant DANS l'écran
-function fuir() {
-    // 1. Récupérer la taille actuelle du bouton (largeur et hauteur)
-    const btnLargeur = noBtn.offsetWidth;
-    const btnHauteur = noBtn.offsetHeight;
-
-    // 2. Calculer l'espace disponible (Taille écran - Taille bouton - petite marge de sécurité)
-    // On enlève 20px de plus pour être sûr qu'il ne colle pas aux bords
-    const maxX = window.innerWidth - btnLargeur - 20;
-    const maxY = window.innerHeight - btnHauteur - 20;
-
-    // 3. Générer des positions aléatoires dans ces limites
-    // Math.max(0, ...) sert à éviter les bugs sur les très petits écrans
-    const randomX = Math.max(0, Math.floor(Math.random() * maxX));
-    const randomY = Math.max(0, Math.floor(Math.random() * maxY));
-
-    // 4. Appliquer la nouvelle position
-    noBtn.style.position = "absolute"; 
-    noBtn.style.left = randomX + "px";
-    noBtn.style.top = randomY + "px";
+body {
+    body {
+    /* ... tes autres codes ... */
+    overflow: hidden; /* C'est ÇA qui empêche les barres de défilement d'apparaître */
+}
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); /* Fond plus neutre/clair */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    overflow: hidden;
 }
 
-// Événement pour PC (souris)
-noBtn.addEventListener("mouseover", fuir);
+.container {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    position: relative;
+    z-index: 10;
+}
 
-// Événement pour Mobile (tactile)
-// "touchstart" est plus réactif que "click" sur mobile
-noBtn.addEventListener("touchstart", (e) => {
-    e.preventDefault(); // Empêche le clic de se valider
-    fuir();
-});
+img {
+    width: 200px;
+    height: auto;
+    border-radius: 15px;
+}
 
-// Sécurité supplémentaire : Si on arrive quand même à cliquer (ex: clic très rapide)
-noBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    fuir();
-});
+h1 {
+    color: #5c3a21; /* Couleur chocolat */
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
 
-// --- LOGIQUE DU BOUTON OUI (inchangée) ---
-yesBtn.addEventListener("click", () => {
-    mainImage.src = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2QyZGVhODQ5YmYyODQ5YmYyODQ5YmYyODQ5YmYyODQ5YmYyODQ5JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/T86i6yDyOYz7J6dPhf/giphy.gif";
-    question.innerText = "Thank you so muchhh";
-    
-    yesBtn.style.display = "none";
-    noBtn.style.display = "none";
+.buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
 
-    confetti({
-        particleCount: 150,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ['#8B4513', '#D2691E', '#F4A460'] 
-    });
-});
+button {
+    padding: 15px 32px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#yes-btn {
+    background-color: #2ecc71;
+    color: white;
+}
+
+#no-btn {
+    background-color: #e74c3c;
+    color: white;
+    position: relative; /* Important pour le faire bouger */
+}
+
+/* Animation du fond */
+.hearts-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.heart {
+    position: absolute;
+    bottom: -50px;
+    font-size: 2rem;
+    animation: floatUp 6s linear infinite;
+    opacity: 0.6;
+}
+
+.heart:nth-child(1) { left: 10%; animation-duration: 8s; }
+.heart:nth-child(2) { left: 30%; animation-duration: 6s; animation-delay: 2s; }
+.heart:nth-child(3) { left: 50%; animation-duration: 10s; animation-delay: 4s; }
+.heart:nth-child(4) { left: 70%; animation-duration: 7s; animation-delay: 1s; }
+.heart:nth-child(5) { left: 90%; animation-duration: 9s; animation-delay: 3s; }
+.heart:nth-child(6) { left: 20%; animation-duration: 11s; animation-delay: 5s; }
+
+@keyframes floatUp {
+    0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+    100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+}
