@@ -3,44 +3,52 @@ const noBtn = document.getElementById("no-btn");
 const question = document.getElementById("question");
 const mainImage = document.getElementById("main-image");
 
-// Cette fonction fait fuir le bouton à un endroit aléatoire
+// Fonction pour déplacer le bouton en restant DANS l'écran
 function fuir() {
-    // On calcule la taille de l'écran disponible (moins la taille du bouton)
-    const largeurEcran = window.innerWidth - 150; // 150px de marge
-    const hauteurEcran = window.innerHeight - 150;
+    // 1. Récupérer la taille actuelle du bouton (largeur et hauteur)
+    const btnLargeur = noBtn.offsetWidth;
+    const btnHauteur = noBtn.offsetHeight;
 
-    // On génère une position aléatoire
-    const randomX = Math.floor(Math.random() * largeurEcran);
-    const randomY = Math.floor(Math.random() * hauteurEcran);
+    // 2. Calculer l'espace disponible (Taille écran - Taille bouton - petite marge de sécurité)
+    // On enlève 20px de plus pour être sûr qu'il ne colle pas aux bords
+    const maxX = window.innerWidth - btnLargeur - 20;
+    const maxY = window.innerHeight - btnHauteur - 20;
 
-    // On applique la nouvelle position
-    noBtn.style.position = "absolute"; // Il devient libre de bouger partout
+    // 3. Générer des positions aléatoires dans ces limites
+    // Math.max(0, ...) sert à éviter les bugs sur les très petits écrans
+    const randomX = Math.max(0, Math.floor(Math.random() * maxX));
+    const randomY = Math.max(0, Math.floor(Math.random() * maxY));
+
+    // 4. Appliquer la nouvelle position
+    noBtn.style.position = "absolute"; 
     noBtn.style.left = randomX + "px";
     noBtn.style.top = randomY + "px";
 }
 
-// 1. Quand la souris approche (PC) -> Il fuit
+// Événement pour PC (souris)
 noBtn.addEventListener("mouseover", fuir);
 
-// 2. Si on essaie de cliquer dessus (Tactile / Mobile) -> Il fuit aussi !
-noBtn.addEventListener("click", (e) => {
-    e.preventDefault(); // Empêche le clic de fonctionner
-    fuir(); // Le bouton s'enfuit
+// Événement pour Mobile (tactile)
+// "touchstart" est plus réactif que "click" sur mobile
+noBtn.addEventListener("touchstart", (e) => {
+    e.preventDefault(); // Empêche le clic de se valider
+    fuir();
 });
 
-// LOGIQUE DU BOUTON OUI
+// Sécurité supplémentaire : Si on arrive quand même à cliquer (ex: clic très rapide)
+noBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    fuir();
+});
+
+// --- LOGIQUE DU BOUTON OUI (inchangée) ---
 yesBtn.addEventListener("click", () => {
-    // 1. Changer l'image pour le gif mignon
     mainImage.src = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2QyZGVhODQ5YmYyODQ5YmYyODQ5YmYyODQ5YmYyODQ5YmYyODQ5JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/T86i6yDyOYz7J6dPhf/giphy.gif";
-    
-    // 2. Mettre le message "Thank you so muchhh"
     question.innerText = "Thank you so muchhh";
     
-    // 3. Cacher les deux boutons
     yesBtn.style.display = "none";
     noBtn.style.display = "none";
 
-    // 4. Lancer les confettis (couleurs chocolat)
     confetti({
         particleCount: 150,
         spread: 70,
