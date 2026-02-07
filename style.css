@@ -1,4 +1,8 @@
 body {
+    body {
+    /* ... tes autres codes ... */
+    overflow: hidden; /* C'est ÇA qui empêche les barres de défilement d'apparaître */
+}
     display: flex;
     justify-content: center;
     align-items: center;
